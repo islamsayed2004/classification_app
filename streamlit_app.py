@@ -8,7 +8,7 @@ from tensorflow.keras.applications.efficientnet import preprocess_input  # Or yo
 model = load_model('brain_tumor_model.h5')
 
 # Streamlit app title
-st.title("Brain Tumor Detection")
+st.title("Brain Tumor Detection Website")
 
 # Upload image
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
