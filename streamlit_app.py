@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 
 # Load your pretrained model (replace with your actual model path)
-model = tf.keras.models.load_model('model_with_selected_classes_75val.h5')
+model = tf.keras.models.load_model('model_with_selected_classes_77val.h5')
 
 # Define the class labels
 class_labels = ['Bagel', 'Apple', 'Ball', 'Bell Pepper', 'Bed']
