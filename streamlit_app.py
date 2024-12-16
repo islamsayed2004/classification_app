@@ -1,39 +1,53 @@
+
 import streamlit as st
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
+import tensorflow as tf
 import numpy as np
-from tensorflow.keras.applications.efficientnet import preprocess_input  # Or your model's preprocessing function
+from PIL import Image
 
-# Load the trained model
-model = load_model('brain_tumor_model.h5')
+# Load your pretrained model (replace with your actual model path)
+model = tf.keras.models.load_model('model_with_selected_classes_75val.h5')
 
-# Streamlit app title
-st.title("Brain Tumor Detection Website")
+# Define the class labels
+class_labels = ['Bagel', 'Apple', 'Ball', 'Bell Pepper', 'Bed']
 
-# Upload image
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-
-if uploaded_file is not None:
-    # Display the uploaded image
-    img = image.load_img(uploaded_file, target_size=(224, 224))
-    st.image(uploaded_file, use_container_width=True)  # Updated to use_container_width
-
-    # Convert the image to an array
-    img_array = image.img_to_array(img)
+# Function to preprocess the uploaded image
+def preprocess_image(uploaded_image):
+    img = Image.open(uploaded_image)
+    img = img.resize((128, 128))  # Resize image to match model input size (224x224 for most models)
     
-    # Add batch dimension (model expects a batch of images)
+    # Convert image to numpy array
+    img_array = np.array(img)
+    
+    # Check if the image has an alpha channel (RGBA) and remove it if necessary
+    if img_array.shape[-1] == 4:
+        img_array = img_array[..., :3]  # Remove alpha channel
+
+    # Normalize the image to the range [0, 1]
+    img_array = img_array / 255.0
+
+    # Add batch dimension (required for models)
     img_array = np.expand_dims(img_array, axis=0)
     
-    # Preprocess the image
-    img_array = preprocess_input(img_array)  # Use the appropriate preprocess function
+    return img_array
 
-    # Predict the class of the image
+# Streamlit UI
+st.title("Image Classifier")
+
+# Image upload
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+
+if uploaded_file is not None:
+    # Preprocess the uploaded image
+    img_array = preprocess_image(uploaded_file)
+
+    # Make prediction
     prediction = model.predict(img_array)
+    predicted_class_index = np.argmax(prediction)
 
-    # Decode the prediction (assuming the model outputs a probability vector)
-    class_names = ['glioma_tumor', 'meningioma_tumor', 'no_tumor', 'pituitary_tumor']  # Adjust class names if needed
-    predicted_class = class_names[np.argmax(prediction)]
+    # Display the uploaded image
+    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
 
-    # Show the prediction result
-    st.write(f"Prediction: {predicted_class}")
-    st.write(f"Prediction Confidence: {np.max(prediction)*100:.2f}%")
+    # Display the prediction
+    st.write(f"Prediction: {class_labels[predicted_class_index]}")
+
