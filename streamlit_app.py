@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.applications.efficientnet import preprocess_input  # Or your model's preprocessing function
 
 # Load the trained model
-model = load_model('/workspaces/classification_app/model_with_selected_classes_75val.h5')
+model = load_model('classification_app/model_with_selected_classes_75val.h5')
 # Streamlit app title
 st.title("Object Detection")
 
