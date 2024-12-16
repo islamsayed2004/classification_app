@@ -1,12 +1,12 @@
-
 import streamlit as st
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from tensorflow.keras.applications.efficientnet import preprocess_input  # Or your model's preprocessing function
 
-# Load the trained model
-model = load_model('model_with_selected_classes_75val.h5')
+# Load the trained model (SavedModel format)
+model = load_model('model_with_selected_classes')  # No need for .h5 extension
+
 # Streamlit app title
 st.title("Object Detection")
 
