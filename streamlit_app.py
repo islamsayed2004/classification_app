@@ -46,7 +46,7 @@ if uploaded_file is not None:
     predicted_class_index = np.argmax(prediction)
 
     # Display the uploaded image
-    st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+    st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
 
     # Display the prediction
     st.write(f"Prediction: {class_labels[predicted_class_index]}")
