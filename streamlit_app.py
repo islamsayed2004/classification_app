@@ -4,18 +4,18 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 from tensorflow.keras.applications.efficientnet import preprocess_input  # Or your model's preprocessing function
 
-# Load the trained model (SavedModel format)
-model = load_model('model_with_selected_classes')  # No need for .h5 extension
+# Load the trained model
+model = load_model('brain_tumor_model.h5')
 
 # Streamlit app title
-st.title("Object Detection")
+st.title("Brain Tumor Detection")
 
 # Upload image
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     # Display the uploaded image
-    img = image.load_img(uploaded_file, target_size=(128, 128))
+    img = image.load_img(uploaded_file, target_size=(224, 224))
     st.image(uploaded_file, use_container_width=True)  # Updated to use_container_width
 
     # Convert the image to an array
@@ -31,7 +31,7 @@ if uploaded_file is not None:
     prediction = model.predict(img_array)
 
     # Decode the prediction (assuming the model outputs a probability vector)
-    class_names = ['Bagel', 'Apple', 'Ball', 'Bell Pepper', 'Bed']  # Adjust class names if needed
+    class_names = ['glioma_tumor', 'meningioma_tumor', 'no_tumor', 'pituitary_tumor']  # Adjust class names if needed
     predicted_class = class_names[np.argmax(prediction)]
 
     # Show the prediction result
